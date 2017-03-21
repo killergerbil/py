@@ -1,0 +1,52 @@
+import  struct
+import  array
+import random
+import  math
+
+class  FloatHistogram:
+def  _init_ ( self, min, max, resolution=3): 
+self.min = min
+self.max = max
+self.resolution = resolution
+buckets = self.bucket(max) 
+self.counts =
+array.array( ‘L’,  [0 for i in xrange ( buckets)])
+def add (self, x):
+i = self.bucket(x)
+self.counts[i]  =
+self.counts[i] + 1
+def addALL(self, histo ):
+if  histo.min != self.min or histo.max  !=  self.max or histo.resolution != histo.resolution:
+raise ValueError(‘Can’t add different resolution histograms’)
+for i in
+xrange (len ( self.counts ) ):
+self.counts[i] =
+self.counts[i] + histo.counts [i]
+def counts (self):
+return self.counts
+def bounds (self):
+return  [self.bound(i) for i in xrange (len(self.counts) ) ] 
+
+def bound(self, i):
+
+z= (i +   (0x3ff << self.resolution) ) << (52- self.resolution) 
+
+return self.min * 
+struct.unpack(‘<d’, struct.pack(‘<Q’,z) ) [ 0]
+
+def bucket (self, x): 
+
+If x <= self.min:
+Return 0 
+If x > max: 
+x = self.max 
+x = x / self.min 
+rep = struct.pack(‘<d’, x ) 
+
+bits = struct.unpack(‘<Q’, rep) 
+
+bits = (bits[0] >> (52 - self.resolution) )
+
+bits = bits - (0x3ff << self.resolution) 
+return (bits) 
+
